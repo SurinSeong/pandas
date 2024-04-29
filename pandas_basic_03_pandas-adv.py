@@ -166,3 +166,79 @@ df.head(3)
 df.groupby('group').agg(['min', 'median', 'max'])
 
 df.groupby('group').agg({'x' : 'min', 'y' : 'sum'})
+
+
+# * 4/26
+
+# +
+# filter : groupby를 통해 그룹으로 묶은 상태에서 그룹 속성을 기준으로 데이터를 필터링
+def filter_mean(x):
+    return x['y'].mean() > 3
+    
+print(df.groupby('group').mean())
+print(df.groupby('group').filter(filter_mean)) # 'group'을 기준으로 나눈 'y'들의 평균이 3보다 크기 때문에 모든 데이터가 추출되었음.
+
+# +
+# apply : groupby를 통해 묶인 데이터에 함수 적용
+
+df.groupby('group').apply(lambda x : x.max()-x.min()) # 최대  - 최소 : 중요 !!!
+# -
+
+# get_group : groupby로 묶인 데이터에서 key값으로 데이터 가져오기
+df.groupby('group').get_group('A')
+
+# MultiIndex : index 자체에 계층을 만든다.
+df = \
+pd.DataFrame(
+    np.random.randn(4, 2),
+    index=[['A', 'A', 'B', 'B'], [1, 2, 1, 2]],
+    columns=['x', 'y']
+)
+df
+
+df['x']
+
+df_col = \
+pd.DataFrame(
+    np.random.randn(4, 4),
+    columns=[['A', 'A', 'B', 'B'], ['x', 'y', 'x', 'y']]
+)
+df_col
+
+df_col['A']
+
+df_col['A']['x']
+
+data = {
+    "날짜": ["2020-01-01", "2020-01-01", "2020-01-01", "2020-01-02", "2020-01-02", "2020-01-02"],
+    "카테고리": ["과일", "채소", "채소", "과일", "과일", "채소"],
+    "수량": [10, 15, 5, 20, 10, 5],
+    '판매처' : ['서울', '부산', '제주', '서울', '부산', '제주']
+}
+df = pd.DataFrame(data)
+df
+
+# pivot_table : index(행 index로 들어갈 key) / columns(열 index로 라벨링되는 값) / values(분석할 데이터 값)
+df.pivot_table(
+    values='수량',
+    index='날짜',
+    columns='카테고리',
+    aggfunc='sum'
+)
+
+df.pivot_table(
+    values='수량',
+    index='날짜',
+    columns='카테고리',
+    aggfunc='mean'
+)
+
+df.pivot_table(
+    values='수량',
+    index='날짜',
+    columns=['카테고리', '판매처'],
+    aggfunc='median',
+    fill_value=0
+)
+
+
