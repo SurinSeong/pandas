@@ -195,6 +195,7 @@ data = [x, y, z]
 
 fig, ax = plt.subplots()
 
+# 이 코드는 중요함 !
 x_ax = np.arange(3)
 for i in x_ax:
     ax.bar(x_ax,
@@ -215,16 +216,83 @@ ax.hist(data, bins=50)
 
 plt.show()
 # -
+# ## Matplotlib with pandas
+
+# 상대경로로 찾기
+path = '../data/president_heights.csv'
+
+# 변수에 담기 전에 열어보고 담기
+pd.read_csv(path).head(3)
+
+pd.read_csv(path).reset_index(drop=True).head(3)
+
+df_ph = pd.read_csv(path).reset_index(drop=True)
+df_ph.head(3)
+
+# +
+# 그래프 그리기
+fig, ax = plt.subplots()
+
+ax.plot(df_ph['order'], df_ph['height(cm)'],
+        label='height')
+
+ax.set_title('President\'s Height')
+ax.set_xlabel('order')
+ax.set_ylabel('height(cm)')
+
+plt.show()
+
+# +
+# 히스토그램으로 그려도 될 듯 !
+
+# +
+path2 = '../data/pokemon.csv'
+
+df_po = pd.read_csv(path2)
+df_po.head(3)
+# -
 
 
+df_po.columns
 
+# +
+# 조건 설정
+condition_01 = (df_po['Type 1'] == 'Fire') | (df_po['Type 2'] == 'Fire')
 
+df_po[condition_01].head(3)
+# -
 
+# 조건으로 묶인 df 변수 저장하기
+fire = df_po[condition_01]
+fire.head(3)
 
+# 조건 설정
+condition_02 = (df_po['Type 1'] == 'Water') | (df_po['Type 2'] == 'Water')
+df_po[condition_02].head(3)
 
+# 변수 저장
+water = df_po[condition_02]
+water.head(3)
 
+# +
+# 그래프
+fig, ax = plt.subplots()
 
+ax.scatter(fire['Attack'], fire['Defense'],
+           color='r', label='Fire', marker='*', s=50)
+ax.scatter(water['Attack'], water['Defense'],
+           color='b', label='Water', marker='o', s=30)
 
+# 제목, 축 이름 설정
+ax.set_title('Fire and Water')
+ax.set_xlabel('Attack')
+ax.set_ylabel('Defense')
+
+# 범례 설정
+ax.legend(loc='best')
+
+plt.show()
+# -
 
 
 
